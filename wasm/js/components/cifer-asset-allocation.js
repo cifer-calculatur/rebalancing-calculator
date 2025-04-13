@@ -17,6 +17,17 @@ export class CiferAssetAllocation extends LitElement {
         return this._sumCurrentAllocation() === 100;
     }
 
+    _dispatchChangeEvent() {
+        const event = new CustomEvent('cifer-asset-allocation:change', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                assetAllocation: this.assetAllocation,
+            },
+        });
+        this.dispatchEvent(event);
+    }
+
     _updateAssetAllocation() {
         const categories = [];
         const assetElements = this.shadowRoot.querySelectorAll('cifer-asset-input');
@@ -28,6 +39,7 @@ export class CiferAssetAllocation extends LitElement {
             categories.push({ name, targetAllocation, currentValue, mode });
         });
         this.assetAllocation = categories;
+        this._dispatchChangeEvent();
     }
 
     _addAssetClass()  {
@@ -38,6 +50,7 @@ export class CiferAssetAllocation extends LitElement {
             mode: 'edit',
         });
         this.requestUpdate();
+        this._dispatchChangeEvent();
     }
 
     _suggestAllocation() {

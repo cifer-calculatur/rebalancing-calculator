@@ -17,7 +17,7 @@ export class CiferAssetInput extends LitElement {
     }
 
     _dispatchChangeEvent() {
-        const event = new Event('cifer-asset-input:change', {
+        const event = new CustomEvent('cifer-asset-input:change', {
             bubbles: true,
             composed: true,
             detail: {
