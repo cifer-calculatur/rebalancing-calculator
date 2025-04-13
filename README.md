@@ -39,3 +39,17 @@ The program will only ask for your holdings and the amount to invest.
 ![Example](./example.png)
 
 If you find this helpful, consider allocating a few bucks to [Unicef](https://www.unicef.org/).
+
+## Building
+
+CLI Command
+
+```bash
+go build -o build/main cmd/rebalance/main.go
+```
+
+WASM
+
+```bash
+GOOS=js GOARCH=wasm go build -o wasm/build/main.wasm wasm/main.go
+```
