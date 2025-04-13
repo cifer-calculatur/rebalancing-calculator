@@ -16,20 +16,38 @@ export class CiferAssetInput extends LitElement {
         this.mode = 'default';
     }
 
+    _dispatchChangeEvent() {
+        const event = new Event('cifer-asset-input:change', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                name: this.name,
+                targetAllocation: this.targetAllocation,
+                currentValue: this.currentValue,
+                mode: this.mode,
+            },
+        });
+        this.dispatchEvent(event);
+    }
+
     _updateCurrentValue(event) {
         this.currentValue = event.target.value;
+        this._dispatchChangeEvent();
     }
 
     _updateName(event) {
         this.name = event.target.value;
+        this._dispatchChangeEvent();
     }
 
     _updateTargetAllocation(event) {
         this.targetAllocation = event.target.value;
+        this._dispatchChangeEvent();
     }
 
     _toggleMode() {
         this.mode = this.mode === 'edit' ? 'default' : 'edit';
+        this._dispatchChangeEvent();
     }
 
     render() {
@@ -48,7 +66,7 @@ export class CiferAssetInput extends LitElement {
                     html`<label>Target Allocation:
                         <input type="number" @blur="${this._updateTargetAllocation}" value="${this.targetAllocation}">
                     </label>` :
-                    html`<span>(Target Allocation: ${this.targetAllocation})</span>`
+                    html`<span>(Target Allocation: ${this.targetAllocation}%)</span>`
                 }
                 <button @click="${this._toggleMode}">${this.mode === 'edit' ? '✔️' : '✏️'}</button>
                 ${this.mode === 'default' ?

@@ -3,17 +3,12 @@ import './cifer-asset-input.js';
 
 export class CiferAssetAllocation extends LitElement {
     static properties = {
-        _assetAllocation: { state: true, type: Array }
+        assetAllocation: { type: Array }
     };
 
     constructor() {
         super();
-        this._assetAllocation = [];
-    }
-
-    get assetAllocation() {
-        this._updateAssetAllocation();
-        return this._assetAllocation;
+        this.assetAllocation = [];
     }
 
     _updateAssetAllocation() {
@@ -26,17 +21,17 @@ export class CiferAssetAllocation extends LitElement {
             const mode = assetElement.mode;
             categories.push({ name, targetAllocation, currentValue, mode });
         });
-        this._assetAllocation = categories;
+        this.assetAllocation = categories;
     }
 
     _addAssetClass()  {
-        this._updateAssetAllocation();
-        this._assetAllocation.push({
+        this.assetAllocation.push({
             name: 'New Asset Class',
             targetAllocation: 0,
             currentValue: 0,
             mode: 'edit',
         });
+        this.requestUpdate();
     }
 
     render() {
@@ -44,8 +39,9 @@ export class CiferAssetAllocation extends LitElement {
             <fieldset>
                 <legend>Asset Allocation</legend>
                 <div class="assets">
-                    ${this._assetAllocation.map((asset) => html`
+                    ${this.assetAllocation.map((asset) => html`
                         <cifer-asset-input
+                            @cifer-asset-input:change="${this._updateAssetAllocation}"
                             name="${asset.name}"
                             target-allocation="${asset.targetAllocation}"
                             current-value="${asset.currentValue}"
