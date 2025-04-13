@@ -1,4 +1,5 @@
 import {LitElement, html} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js';
+import styles from '../modules/commonStyles.js';
 
 import './cifer-asset-allocation.js';
 import './cifer-result.js';
@@ -64,28 +65,68 @@ export class CiferApp extends LitElement {
 
     render() {
         return html`
-            <cifer-asset-allocation
-                @cifer-asset-allocation:change="${this._updateAssetAllocation}"
-                .appSettings=${this.appSettings}
-                .assetAllocation=${this.assetAllocation}
-            ></cifer-asset-allocation>
-            <label>
-                Amount to invest:
-                <input
-                    @blur=${this._updateAmountToInvest}
-                    type="number"
-                    value="${this.amountToInvest}"
-                    step="0.01"
-                />
-                ${this.appSettings.currencySymbol}
-            </label>
-            <button
-                @click="${this._runCalculation}"
-            >Calculate</button>
-            <cifer-result
-                .appSettings=${this.appSettings}
-                .result=${this._result}
-            ></cifer-result>
+            <style>
+                ${styles.button}
+                ${styles.input}
+                :host {
+                    background-color: #000;
+                    color: var(--font-color);
+                    display: block;
+                    font-family: var(--font-family);
+                    height: 100vh;
+                    width: 100vw;
+                }
+
+                .container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                    margin: auto;
+                    max-width: 90vw;
+                    padding-top: 20px;
+                    width: 900px;
+                }
+
+                summary {
+                    cursor: pointer;
+                }
+            </style>
+            <div class="container">
+                <h1>CiFeR - Cash Flow Rebalancing Calculator</h1>
+                <details>
+                    <summary>Explanation of Cash Flow Rebalancing and this tool</summary>
+                    <p>This tool is designed for investors who have a portfolio with a target asset allocation. Over time, as the performance of your asset classes diverges, your actual allocation may drift away from your original plan.</p>
+                    <p>Traditionally, rebalancing involves selling assets from overrepresented asset classes and using the proceeds to buy assets from underrepresented ones. However, selling assets can incur costs such as trading fees, spreads, or taxes.</p>
+                    <p>Cash Flow Rebalancing offers an alternative. Instead of selling, you use only your new contributions to bring your portfolio back toward the target allocation. Each time you have new funds available to invest, use this calculator to determine how much to allocate to each asset class.</p>
+                    <p>If your current allocation has deviated too far for your new investment alone to fully rebalance the portfolio, the calculator will bring you as close as possible—assuming future contributions will eventually help close the gap.</p>
+                </details>
+                <cifer-asset-allocation
+                    @cifer-asset-allocation:change="${this._updateAssetAllocation}"
+                    .appSettings=${this.appSettings}
+                    .assetAllocation=${this.assetAllocation}
+                ></cifer-asset-allocation>
+                <fieldset>
+                    <legend>Investment</legend>
+                    <label>
+                        Amount to invest:
+                        <input
+                            @blur=${this._updateAmountToInvest}
+                            type="number"
+                            value="${this.amountToInvest}"
+                            step="0.01"
+                        />
+                        ${this.appSettings.currencySymbol}
+                    </label>
+                    <button
+                        @click="${this._runCalculation}"
+                    >Calculate
+                    </button>
+                </fieldset>
+                <cifer-result
+                    .appSettings=${this.appSettings}
+                    .result=${this._result}
+                ></cifer-result>
+            </div>
         `;
     }
 }

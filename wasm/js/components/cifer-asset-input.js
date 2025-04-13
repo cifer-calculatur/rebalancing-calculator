@@ -1,4 +1,5 @@
 import {LitElement, html, nothing} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js';
+import styles from '../modules/commonStyles.js';
 
 export class CiferAssetInput extends LitElement {
     static properties = {
@@ -66,28 +67,39 @@ export class CiferAssetInput extends LitElement {
     render() {
         return html`
             <style>
-                /* Add your styles here */
+                ${styles.button}
+                ${styles.input}
+
+                span {
+                    cursor: pointer;
+                }
             </style>
             <div>
                 ${this.mode === 'edit' ?
-                    html`<label>Name:
-                        <input type="text" @blur="${this._updateName}" value="${this.name}">
-                    </label>` :
-                    html`<span><strong>${this.name}</strong></span>`
+                    html`
+                        <label>Name:
+                            <input type="text" @blur="${this._updateName}" value="${this.name}">
+                        </label>
+                        <label>Target Allocation:
+                            <input type="number" @blur="${this._updateTargetAllocation}" value="${this.targetAllocation}">
+                        </label>
+                    ` :
+                    html`
+                        <span style="display: inline-block; width: 50%;" @click="${this._toggleMode}">
+                            <strong>${this.name}</strong>
+                            (Target: ${this.targetAllocation}%)
+                        </span>
+                    `
                 }
                 ${this.mode === 'edit' ?
-                    html`<label>Target Allocation:
-                        <input type="number" @blur="${this._updateTargetAllocation}" value="${this.targetAllocation}">
-                    </label>` :
-                    html`<span>(Target Allocation: ${this.targetAllocation}%)</span>`
-                }
-                <button
-                    @click="${this._toggleMode}"
-                >${this.mode === 'edit' ? '✔️' : '✏️'}</button>
-                ${this.mode === 'edit' ?
-                    html`<button
-                        @click=${this._dispatchRemoveEvent}
-                    >🗑️</button>` :
+                    html`
+                        <button
+                            @click="${this._toggleMode}"
+                        >✔</button>
+                        <button
+                            @click=${this._dispatchRemoveEvent}
+                        >🗑</button>
+                    ` :
                     nothing
                 }
                 ${this.mode === 'default' ?

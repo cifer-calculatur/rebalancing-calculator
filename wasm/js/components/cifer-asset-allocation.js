@@ -1,4 +1,5 @@
 import {LitElement, html, nothing} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js';
+import styles from '../modules/commonStyles.js';
 import './cifer-asset-input.js';
 
 export class CiferAssetAllocation extends LitElement {
@@ -78,6 +79,13 @@ export class CiferAssetAllocation extends LitElement {
 
     render() {
         return html`
+            <style>
+                cifer-asset-input {
+                    display: block;
+                    margin-bottom: 5px;
+                }
+                ${styles.button}
+            </style>
             <fieldset>
                 <legend>Asset Allocation</legend>
                 <div class="assets">
