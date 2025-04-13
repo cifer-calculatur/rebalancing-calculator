@@ -6,6 +6,7 @@ import './cifer-result.js';
 export class CiferApp extends LitElement {
     static properties = {
         amountToInvest: { type: Number },
+        appSettings: { type: Object },
         assetAllocation: { type: Array },
         _result: { state: true, type: Array },
     }
@@ -14,6 +15,11 @@ export class CiferApp extends LitElement {
         super();
         this.amountToInvest = .0;
         this.assetAllocation = [];
+        this.appSettings = {
+            currencySymbol: "€",
+            currencyName: "EUR",
+            locale: "de-DE",
+        };
         this._result = [];
     }
 
@@ -24,6 +30,7 @@ export class CiferApp extends LitElement {
             detail: {
                 amountToInvest: this.amountToInvest,
                 assetAllocation: this.assetAllocation,
+                appSettings: this.appSettings,
             },
         });
         this.dispatchEvent(event);
@@ -44,7 +51,7 @@ export class CiferApp extends LitElement {
     }
 
     _updateAmountToInvest(event) {
-        this.amountToInvest = event.target.value;
+        this.amountToInvest = parseFloat(event.target.value);
         this._result = [];
         this._dispatchChangeEvent();
     }
@@ -59,19 +66,26 @@ export class CiferApp extends LitElement {
         return html`
             <cifer-asset-allocation
                 @cifer-asset-allocation:change="${this._updateAssetAllocation}"
+                .appSettings=${this.appSettings}
                 .assetAllocation=${this.assetAllocation}
             ></cifer-asset-allocation>
             <label>
                 Amount to invest:
                 <input
-                    @blur="${this._updateAmountToInvest}"
+                    @blur=${this._updateAmountToInvest}
                     type="number"
                     value="${this.amountToInvest}"
                     step="0.01"
                 />
+                ${this.appSettings.currencySymbol}
             </label>
-            <button @click="${this._runCalculation}">Calculate</button>
-            <cifer-result .result=${this._result}></cifer-result>
+            <button
+                @click="${this._runCalculation}"
+            >Calculate</button>
+            <cifer-result
+                .appSettings=${this.appSettings}
+                .result=${this._result}
+            ></cifer-result>
         `;
     }
 }
