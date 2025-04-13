@@ -27,11 +27,20 @@ export class CiferAssetAllocation extends LitElement {
     _addAssetClass()  {
         this.assetAllocation.push({
             name: 'New Asset Class',
-            targetAllocation: 0,
+            targetAllocation: this._suggestAllocation(),
             currentValue: 0,
             mode: 'edit',
         });
         this.requestUpdate();
+    }
+
+    _suggestAllocation() {
+        let totalAllocation = 0;
+        this.assetAllocation.map((asset) => {
+            totalAllocation += asset.targetAllocation;
+        });
+        const suggestedAllocation = 100 - totalAllocation;
+        return Math.max(Math.min(suggestedAllocation, 80), 0);
     }
 
     render() {
@@ -42,10 +51,10 @@ export class CiferAssetAllocation extends LitElement {
                     ${this.assetAllocation.map((asset) => html`
                         <cifer-asset-input
                             @cifer-asset-input:change="${this._updateAssetAllocation}"
-                            name="${asset.name}"
-                            target-allocation="${asset.targetAllocation}"
-                            current-value="${asset.currentValue}"
-                            mode="${asset.mode}"
+                            .currentValue=${asset.currentValue}
+                            .mode=${asset.mode}
+                            .name=${asset.name}
+                            .targetAllocation=${asset.targetAllocation}
                         />
                     `)}
                 </div>
