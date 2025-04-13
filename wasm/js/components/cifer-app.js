@@ -4,6 +4,12 @@ import styles from '../modules/commonStyles.js';
 import './cifer-asset-allocation.js';
 import './cifer-result.js';
 
+const defaultSettings = {
+    currencySymbol: "€",
+    currencyName: "EUR",
+    locale: "de-DE",
+};
+
 export class CiferApp extends LitElement {
     static properties = {
         amountToInvest: { type: Number },
@@ -16,11 +22,7 @@ export class CiferApp extends LitElement {
         super();
         this.amountToInvest = .0;
         this.assetAllocation = [];
-        this.appSettings = {
-            currencySymbol: "€",
-            currencyName: "EUR",
-            locale: "de-DE",
-        };
+        this.appSettings = defaultSettings;
         this._result = [];
     }
 
@@ -35,6 +37,17 @@ export class CiferApp extends LitElement {
             },
         });
         this.dispatchEvent(event);
+    }
+
+    _removeState(e) {
+        e.preventDefault();
+
+        this.amountToInvest = .0;
+        this.appSettings = defaultSettings;
+        this.assetAllocation = [];
+        this._result = [];
+
+        this._dispatchChangeEvent();
     }
 
     _runCalculation() {
@@ -75,6 +88,10 @@ export class CiferApp extends LitElement {
                     font-family: var(--font-family);
                     height: 100vh;
                     width: 100vw;
+                }
+
+                a {
+                    color: color: var(--font-color);
                 }
 
                 .container {
@@ -126,6 +143,14 @@ export class CiferApp extends LitElement {
                     .appSettings=${this.appSettings}
                     .result=${this._result}
                 ></cifer-result>
+                <details>
+                    <summary>Privacy</summary>
+                    <p>This web page is hosted on GitHub pages.</p>
+                    <blockquote>
+                        <p>When a GitHub Pages site is visited, the visitor's IP address is logged and stored for security purposes, regardless of whether the visitor has signed into GitHub or not. For more information about GitHub's security practices, see <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub Privacy Statement</a>.</p>
+                    </blockquote>
+                    <p>All data that you put into the calculation tool will remain in your browser. The calculation is performed on your device. The data is saved in your browser's local storage for your convenience. <a href="#" @click=${this._removeState}>Click here</a> if you wish to remove any stored data from your browser (permanently deletes your provided data!).</p>
+                </details>
             </div>
         `;
     }
