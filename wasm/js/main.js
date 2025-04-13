@@ -1,12 +1,14 @@
-const go = new Go();
-WebAssembly.instantiateStreaming(fetch("./build/main.wasm"), go.importObject)
-    .then((result) => {
-        console.log("WebAssembly module successfully instantiated.");
-        go.run(result.instance);
-    })
-    .catch((error) => {
-        console.error("Failed to instantiate WebAssembly module:", error);
-    });
+window.addEventListener('load', () => {
+    const go = new Go();
+    WebAssembly.instantiateStreaming(fetch("./build/main.wasm"), go.importObject)
+        .then((result) => {
+            console.log("WebAssembly module successfully instantiated.");
+            go.run(result.instance);
+        })
+        .catch((error) => {
+            console.error("Failed to instantiate WebAssembly module:", error);
+        });
+})
 
 function deepMerge(obj1, obj2) {
     for (let key in obj2) {
