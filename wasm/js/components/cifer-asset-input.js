@@ -41,7 +41,7 @@ export class CiferAssetInput extends LitElement {
     }
 
     _updateTargetAllocation(event) {
-        this.targetAllocation = event.target.value;
+        this.targetAllocation = Math.max(Math.min(event.target.value, 100), 0);
         this._dispatchChangeEvent();
     }
 

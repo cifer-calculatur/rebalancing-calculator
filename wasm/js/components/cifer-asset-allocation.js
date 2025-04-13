@@ -1,14 +1,20 @@
-import {LitElement, html} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js';
+import {LitElement, html, nothing} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js';
 import './cifer-asset-input.js';
 
 export class CiferAssetAllocation extends LitElement {
     static properties = {
-        assetAllocation: { type: Array }
+        assetAllocation: { type: Array },
+        _showValidationResult: { state: true, type: Boolean },
     };
 
     constructor() {
         super();
         this.assetAllocation = [];
+    }
+
+    validate() {
+        this._showValidationResult = true;
+        return this._sumCurrentAllocation() === 100;
     }
 
     _updateAssetAllocation() {
@@ -35,12 +41,16 @@ export class CiferAssetAllocation extends LitElement {
     }
 
     _suggestAllocation() {
+        const suggestedAllocation = 100 - this._sumCurrentAllocation();
+        return Math.max(Math.min(suggestedAllocation, 80), 0);
+    }
+
+    _sumCurrentAllocation() {
         let totalAllocation = 0;
         this.assetAllocation.map((asset) => {
             totalAllocation += asset.targetAllocation;
         });
-        const suggestedAllocation = 100 - totalAllocation;
-        return Math.max(Math.min(suggestedAllocation, 80), 0);
+        return totalAllocation;
     }
 
     render() {
@@ -60,6 +70,13 @@ export class CiferAssetAllocation extends LitElement {
                 </div>
                 <button @click="${this._addAssetClass}">Add Asset class</button>
             </fieldset>
+            ${(this._showValidationResult && this._sumCurrentAllocation() !== 100) ? html`
+                <div>
+                    <p>Allocation currently sums up to ${this._sumCurrentAllocation()}%.
+                        Set to 100% to start the calculation.
+                    </p>
+                </div>
+            ` : nothing}
         `;
     }
 }

@@ -14,7 +14,11 @@ export class CiferApp extends LitElement {
     }
 
     _runCalculation() {
-        const assetAllocation = this.shadowRoot.querySelector('cifer-asset-allocation').assetAllocation;
+        const assetAllocationComponent = this.shadowRoot.querySelector('cifer-asset-allocation');
+        if (!assetAllocationComponent.validate()) {
+            return;
+        }
+        const assetAllocation = assetAllocationComponent.assetAllocation;
         const amountToInvest = parseFloat(this.shadowRoot.getElementById('amount').value);
 
         try {
