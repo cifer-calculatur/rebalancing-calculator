@@ -2,12 +2,18 @@ import {LitElement, html, nothing} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/
 
 export class CiferResult extends LitElement {
     static properties = {
+        appSettings: { type: Object },
         result: { type: Array }
     }
 
     constructor() {
         super();
+        this.appSettings = {};
         this.result = [];
+    }
+
+    _formatCurrency(value) {
+        return new Intl.NumberFormat(this.appSettings.locale, { style: "currency", currency: this.appSettings.currencyName }).format(value);
     }
 
     render() {
@@ -31,8 +37,8 @@ export class CiferResult extends LitElement {
                     ${this.result.map((asset) => html`
                         <tr>
                             <td>${asset.Name}</td>
-                            <td>${asset.Investment}</td>
-                            <td>${asset.AchievedAllocation}</td>
+                            <td>${this._formatCurrency(asset.Investment)}</td>
+                            <td>${Math.round(asset.AchievedAllocation * 100) / 100}%</td>
                         </tr>
                     `)}
                 </tbody>

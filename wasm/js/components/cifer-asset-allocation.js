@@ -3,12 +3,14 @@ import './cifer-asset-input.js';
 
 export class CiferAssetAllocation extends LitElement {
     static properties = {
+        appSettings: { type: Object },
         assetAllocation: { type: Array },
         _showValidationResult: { state: true, type: Boolean },
     };
 
     constructor() {
         super();
+        this.appSettings = {};
         this.assetAllocation = [];
     }
 
@@ -74,6 +76,7 @@ export class CiferAssetAllocation extends LitElement {
                     ${this.assetAllocation.map((asset) => html`
                         <cifer-asset-input
                             @cifer-asset-input:change="${this._updateAssetAllocation}"
+                            .appSettings=${this.appSettings}
                             .currentValue=${asset.currentValue}
                             .mode=${asset.mode}
                             .name=${asset.name}

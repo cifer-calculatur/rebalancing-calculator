@@ -2,10 +2,11 @@ import {LitElement, html, nothing} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/
 
 export class CiferAssetInput extends LitElement {
     static properties = {
+        appSettings: { type: Object },
+        currentValue: { type: Number },
+        mode: { type: String },
         name: { type: String },
         targetAllocation: { type: Number },
-        currentValue: { type: Number },
-        mode: { type: String }
     };
 
     constructor() {
@@ -72,6 +73,7 @@ export class CiferAssetInput extends LitElement {
                 ${this.mode === 'default' ?
                     html`<label>Current Value:
                         <input type="number" @blur="${this._updateCurrentValue}" value="${this.currentValue}">
+                        ${this.appSettings.currencySymbol}
                     </label>` :
                     nothing
                 }
