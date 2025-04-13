@@ -38,7 +38,8 @@ export class CiferAssetAllocation extends LitElement {
             const targetAllocation = parseFloat(assetElement.targetAllocation);
             const currentValue = parseFloat(assetElement.currentValue);
             const mode = assetElement.mode;
-            categories.push({ name, targetAllocation, currentValue, mode });
+            const identifier = assetElement.identifier;
+            categories.push({ name, targetAllocation, currentValue, mode, identifier });
         });
         this.assetAllocation = categories;
         this._dispatchChangeEvent();
@@ -46,12 +47,19 @@ export class CiferAssetAllocation extends LitElement {
 
     _addAssetClass()  {
         this.assetAllocation.push({
+            currentValue: 0,
+            identifier: Math.random().toString(36).substring(2, 15),
+            mode: 'edit',
             name: 'New Asset Class',
             targetAllocation: this._suggestAllocation(),
-            currentValue: 0,
-            mode: 'edit',
         });
         this.requestUpdate();
+        this._dispatchChangeEvent();
+    }
+
+    _removeAssetClass(event) {
+        const identifier = event.detail.identifier;
+        this.assetAllocation = this.assetAllocation.filter((asset) => asset.identifier !== identifier);
         this._dispatchChangeEvent();
     }
 
@@ -76,8 +84,10 @@ export class CiferAssetAllocation extends LitElement {
                     ${this.assetAllocation.map((asset) => html`
                         <cifer-asset-input
                             @cifer-asset-input:change="${this._updateAssetAllocation}"
+                            @cifer-asset-input:remove="${this._removeAssetClass}"
                             .appSettings=${this.appSettings}
                             .currentValue=${asset.currentValue}
+                            .identifier=${asset.identifier}
                             .mode=${asset.mode}
                             .name=${asset.name}
                             .targetAllocation=${asset.targetAllocation}

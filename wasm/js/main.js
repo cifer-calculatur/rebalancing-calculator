@@ -20,6 +20,9 @@ function deepMerge(obj1, obj2) {
 window.addEventListener('load', () => {
     const app = document.querySelector('cifer-app');
     const state = JSON.parse(localStorage.getItem('cifer-state'));
+    if (!state) {
+        return;
+    }
     if (state.assetAllocation) {
         app.assetAllocation = state.assetAllocation;
     }
