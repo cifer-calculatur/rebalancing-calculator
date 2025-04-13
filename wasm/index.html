@@ -1,0 +1,77 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <script src="wasm_exec.js"></script>
+    <script>
+        async function runCalculation() {
+            const categories = [];
+            const assetElements = document.querySelectorAll('.assets > div');
+            assetElements.forEach((assetElement) => {
+                const name = assetElement.querySelector('input[name="name"]').value;
+                const target = parseFloat(assetElement.querySelector('input[name="target"]').value);
+                const current = parseFloat(assetElement.querySelector('input[name="current"]').value);
+                categories.push({ Name: name, Target: target, Current: current });
+            });
+
+            const amountToInvest = parseFloat(document.getElementById('amount').value);
+
+            try {
+                const result = calculateRebalance(categories, amountToInvest);
+
+                if (result instanceof Error) {
+                    console.error("Error calculating rebalance:", result.message);
+                } else {
+                    displayResults(result);
+                }
+            } catch (err) {
+                // Catch potential errors during the WASM call itself
+                console.error("Error calling WASM function:", err);
+            }
+        }
+
+        function displayResults(data) {
+            document.querySelector('pre').innerText = JSON.stringify(data, null, 2);
+        }
+
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch("build/main.wasm"), go.importObject).then((result) => {
+            go.run(result.instance);
+        });
+
+        window.addEventListener('load', () => {
+            document.querySelector('button[name="calc"]').addEventListener('click', runCalculation);
+            document.querySelector('button[name="add-asset"]').addEventListener('click', (e) => {
+                e.preventDefault();
+                const assetsDiv = document.querySelector('.assets');
+                const newAsset = document.createElement('div');
+                newAsset.innerHTML = `
+                    <label>
+                        Name: <input type="text" name="name" value="New Asset"/>
+                    </label>
+                    <label>
+                        Target: <input type="number" name="target" value="0" step="0.01"/>
+                    </label>
+                    <label>
+                        Current: <input type="number" name="current" value="0" step="0.01"/>
+                    </label>
+                `;
+                assetsDiv.appendChild(newAsset);
+            });
+        });
+    </script>
+    <title>CiFeR - Cash Flow Rebalancing Calculator</title>
+</head>
+<body>
+    <fieldset>
+        <legend>Asset Allocation</legend>
+        <div class="assets"></div>
+        <button name="add-asset">Add Asset</button>
+    </fieldset>
+    <label>
+        Amount to invest:
+        <input type="number" id="amount" value="380.00" step="0.01"/>
+    </label>
+    <button name="calc">Calculate</button>
+    <pre></pre>
+</body>
+</html>
