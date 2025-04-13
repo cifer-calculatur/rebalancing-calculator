@@ -4,6 +4,7 @@ export class CiferAssetInput extends LitElement {
     static properties = {
         appSettings: { type: Object },
         currentValue: { type: Number },
+        identifier: { type: String },
         mode: { type: String },
         name: { type: String },
         targetAllocation: { type: Number },
@@ -26,6 +27,17 @@ export class CiferAssetInput extends LitElement {
                 targetAllocation: this.targetAllocation,
                 currentValue: this.currentValue,
                 mode: this.mode,
+            },
+        });
+        this.dispatchEvent(event);
+    }
+
+    _dispatchRemoveEvent() {
+        const event = new CustomEvent('cifer-asset-input:remove', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                identifier: this.identifier,
             },
         });
         this.dispatchEvent(event);
@@ -69,7 +81,15 @@ export class CiferAssetInput extends LitElement {
                     </label>` :
                     html`<span>(Target Allocation: ${this.targetAllocation}%)</span>`
                 }
-                <button @click="${this._toggleMode}">${this.mode === 'edit' ? '✔️' : '✏️'}</button>
+                <button
+                    @click="${this._toggleMode}"
+                >${this.mode === 'edit' ? '✔️' : '✏️'}</button>
+                ${this.mode === 'edit' ?
+                    html`<button
+                        @click=${this._dispatchRemoveEvent}
+                    >🗑️</button>` :
+                    nothing
+                }
                 ${this.mode === 'default' ?
                     html`<label>Current Value:
                         <input type="number" @blur="${this._updateCurrentValue}" value="${this.currentValue}">
