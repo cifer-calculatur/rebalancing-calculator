@@ -26,7 +26,6 @@ export class CiferApp extends LitElement {
     }
 
     render() {
-        console.log(this._result);
         return html`
             <cifer-asset-allocation></cifer-asset-allocation>
             <label>
