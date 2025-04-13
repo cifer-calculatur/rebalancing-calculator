@@ -58,9 +58,9 @@ func calculateRebalance(this js.Value, args []js.Value) interface{} {
         // Extract data, converting JS values to Go types
         // Add checks for missing properties if necessary (jsValue.IsUndefined())
 		category := structs.Category{
-			Name:    jsCategoryObject.Get("Name").String(),
-			Target:  jsCategoryObject.Get("Target").Float(),
-			Current: jsCategoryObject.Get("Current").Float(),
+			Name:    jsCategoryObject.Get("name").String(),
+			Target:  jsCategoryObject.Get("targetAllocation").Float(),
+			Current: jsCategoryObject.Get("currentValue").Float(),
 			Locked:  false,  // Assumes "Locked" exists and is boolean
 			Investment: 0, // Investment is calculated, initialize to 0
 		}

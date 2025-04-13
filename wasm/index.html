@@ -2,22 +2,14 @@
 <head>
     <meta charset="utf-8"/>
     <script src="wasm_exec.js"></script>
-    <script type="module" src="js/components/cifer-asset-input.js"></script>
+    <script type="module" src="js/components/cifer-asset-allocation.js"></script>
     <script>
         async function runCalculation() {
-            const categories = [];
-            const assetElements = document.querySelectorAll('cifer-asset-input');
-            assetElements.forEach((assetElement) => {
-                const name = assetElement.name;
-                const target = parseFloat(assetElement.targetAllocation);
-                const current = parseFloat(assetElement.currentValue);
-                categories.push({ Name: name, Target: target, Current: current });
-            });
-
+            const assetAllocation = document.querySelector('cifer-asset-allocation').assetAllocation;
             const amountToInvest = parseFloat(document.getElementById('amount').value);
 
             try {
-                const result = calculateRebalance(categories, amountToInvest);
+                const result = calculateRebalance(assetAllocation, amountToInvest);
 
                 if (result instanceof Error) {
                     console.error("Error calculating rebalance:", result.message);
@@ -41,26 +33,12 @@
 
         window.addEventListener('load', () => {
             document.querySelector('button[name="calc"]').addEventListener('click', runCalculation);
-            document.querySelector('button[name="add-asset"]').addEventListener('click', (e) => {
-                e.preventDefault();
-                const assetsDiv = document.querySelector('.assets');
-                const assetInput = document.createElement('cifer-asset-input');
-                assetInput.name = "New Asset";
-                assetInput.targetAllocation = 0;
-                assetInput.currentValue = 0;
-                assetInput.mode = "edit";
-                assetsDiv.appendChild(assetInput);
-            });
         });
     </script>
     <title>CiFeR - Cash Flow Rebalancing Calculator</title>
 </head>
 <body>
-    <fieldset>
-        <legend>Asset Allocation</legend>
-        <div class="assets"></div>
-        <button name="add-asset">Add Asset class</button>
-    </fieldset>
+    <cifer-asset-allocation></cifer-asset-allocation>
     <label>
         Amount to invest:
         <input type="number" id="amount" value="380.00" step="0.01"/>
