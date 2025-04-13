@@ -30,7 +30,7 @@ export class CiferResult extends LitElement {
                 td, th {
                     color: var(--font-color);
                     font-family: var(--font-family);
-                    padding: 5px;
+                    padding: 5px 10px;
                 }
                 td.number {
                     text-align: right;
