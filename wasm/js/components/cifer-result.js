@@ -1,4 +1,4 @@
-import {LitElement, html, nothing} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js';
+import {LitElement, html, nothing} from 'lit';
 
 export class CiferResult extends LitElement {
     static properties = {

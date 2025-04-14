@@ -18,6 +18,20 @@ jobs:
             - name: Build
               run: GOOS=js GOARCH=wasm go build -o wasm/build/main.wasm wasm/main.go
 
+            - name: Copy WASM runtime
+              run: cp "$(go env GOROOT)/libexec/misc/wasm/wasm_exec.js" wasm/
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                node-version: '18'
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Run npm build
+              run: npm run build
+
             - name: Upload static files as artifact
               id: deployment
               uses: actions/upload-pages-artifact@v3

@@ -1,4 +1,4 @@
-import {css} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js';
+import {css} from 'lit';
 
 export default {
     button: css`
@@ -26,7 +26,7 @@ export default {
         }
         input[type="number"] {
             text-align: right;
-            width: 100px;
+            width: 140px;
         }
     `,
 }

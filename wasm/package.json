@@ -1,0 +1,16 @@
+{
+    "name": "cifer-web",
+    "version": "1.0.0",
+    "main": "js/main.js",
+    "scripts": {
+        "build": "esbuild js/main.js --bundle > build/main.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "esbuild": "^0.25.2",
+        "lit": "^3.3.0"
+    }
+}
