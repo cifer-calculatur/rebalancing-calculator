@@ -22,6 +22,7 @@ export default {
             color: var(--font-color);
             font-family: var(--font-family);
             font-size: 16px;
+            height: 33px;
             padding: var(--button-padding);
         }
         input[type="number"] {

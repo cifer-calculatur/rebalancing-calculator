@@ -82,7 +82,7 @@ export class CiferAssetAllocation extends LitElement {
             <style>
                 cifer-asset-input {
                     display: block;
-                    margin-bottom: 5px;
+                    margin-bottom: 24px;
                 }
                 ${styles.button}
             </style>

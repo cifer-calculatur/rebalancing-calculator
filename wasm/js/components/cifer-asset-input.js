@@ -1,5 +1,6 @@
-import {LitElement, html, nothing} from 'lit';
+import {LitElement, html} from 'lit';
 import styles from '../modules/commonStyles.js';
+import './cifer-amount-input';
 
 export class CiferAssetInput extends LitElement {
     static properties = {
@@ -45,7 +46,7 @@ export class CiferAssetInput extends LitElement {
     }
 
     _updateCurrentValue(event) {
-        this.currentValue = event.target.value;
+        this.currentValue = event.detail.value;
         this._dispatchChangeEvent();
     }
 
@@ -67,47 +68,78 @@ export class CiferAssetInput extends LitElement {
     render() {
         return html`
             <style>
+                :host {
+                    line-height: 1.4;
+                }
+
                 ${styles.button}
                 ${styles.input}
 
                 span {
                     cursor: pointer;
                 }
+
+                .container {
+                    align-items: center;
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
+                .col {
+                    flex-basis: 100%;
+                    margin-bottom: 8px;
+                }
+
+                @media (min-width: 600px) {
+                    .container {
+                        flex-wrap: nowrap;
+                    }
+
+                    .col {
+                        margin-bottom: 0;
+                    }
+
+                    .col-lg-4 {
+                        flex-basis: 33.3333%;
+                    }
+
+                    .col-lg-8 {
+                        flex-basis: 66.6667%;
+                    }
+
+                    .col:last-child {
+                        text-align: right;
+                    }
+                }
             </style>
-            <div>
+            <div class="container">
                 ${this.mode === 'edit' ?
                     html`
-                        <label>Name:
-                            <input type="text" @blur="${this._updateName}" value="${this.name}">
-                        </label>
-                        <label>Target Allocation:
-                            <input type="number" @blur="${this._updateTargetAllocation}" value="${this.targetAllocation}">
-                        </label>
+                        <div class="col col-lg-4">
+                            <label>Name
+                                <input type="text" @blur="${this._updateName}" value="${this.name}">
+                            </label>
+                        </div>
+                        <div class="col col-lg-8">
+                            <label for="allocation">Target Allocation</label>
+
+                            <input id="allocation" type="number" @blur="${this._updateTargetAllocation}" value="${this.targetAllocation}"><button @click="${this._toggleMode}">✅</button><button @click=${this._dispatchRemoveEvent}>🗑</button>
+                        </div>
                     ` :
                     html`
-                        <span style="display: inline-block; width: 50%;" @click="${this._toggleMode}">
+                        <div class="col col-lg-8" @click="${this._toggleMode}">
                             <strong>${this.name}</strong>
                             (Target: ${this.targetAllocation}%)
-                        </span>
+                        </div>
+                        <div class="col col-lg-4">
+                            <cifer-amount-input
+                                @cifer-amount-input:change="${this._updateCurrentValue}"
+                                .appSettings=${this.appSettings}
+                                .label=${'Value'}
+                                .value=${this.currentValue}
+                            ></cifer-amount-input>
+                        </div>
                     `
-                }
-                ${this.mode === 'edit' ?
-                    html`
-                        <button
-                            @click="${this._toggleMode}"
-                        >✔</button>
-                        <button
-                            @click=${this._dispatchRemoveEvent}
-                        >🗑</button>
-                    ` :
-                    nothing
-                }
-                ${this.mode === 'default' ?
-                    html`<label>Current Value:
-                        <input type="number" @blur="${this._updateCurrentValue}" value="${this.currentValue}">
-                        ${this.appSettings.currencySymbol}
-                    </label>` :
-                    nothing
                 }
             </div>
         `;

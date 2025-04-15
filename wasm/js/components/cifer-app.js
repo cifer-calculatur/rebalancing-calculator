@@ -65,7 +65,7 @@ export class CiferApp extends LitElement {
     }
 
     _updateAmountToInvest(event) {
-        this.amountToInvest = parseFloat(event.target.value);
+        this.amountToInvest = parseFloat(event.detail.value);
         this._result = [];
         this._dispatchChangeEvent();
     }
@@ -87,7 +87,20 @@ export class CiferApp extends LitElement {
                     display: block;
                     font-family: var(--font-family);
                     height: 100vh;
+                    line-height: 1.4;
                     width: 100vw;
+                }
+
+                header {
+                    h1 {
+                        font-size: 26px;
+                        margin-bottom: 8px;
+                    }
+                    p {
+                        margin: 0;
+                    }
+
+                    margin-bottom: 10px;
                 }
 
                 a {
@@ -101,7 +114,7 @@ export class CiferApp extends LitElement {
                     margin: auto;
                     max-width: 90vw;
                     padding-top: 20px;
-                    width: 900px;
+                    width: 800px;
                 }
 
                 summary {
@@ -109,7 +122,10 @@ export class CiferApp extends LitElement {
                 }
             </style>
             <div class="container">
-                <h1>CiFeR - Cash Flow Rebalancing Calculator</h1>
+                <header>
+                    <h1>CiFeR</h1>
+                    <p>Cash Flow Rebalancing Calculator</p>
+                </header>
                 <details>
                     <summary>Explanation of Cash Flow Rebalancing and this tool</summary>
                     <p>This tool is designed for investors who have a portfolio with a target asset allocation. Over time, as the performance of your asset classes diverges, your actual allocation may drift away from your original plan.</p>
@@ -124,16 +140,12 @@ export class CiferApp extends LitElement {
                 ></cifer-asset-allocation>
                 <fieldset>
                     <legend>Investment</legend>
-                    <label>
-                        Amount to invest:
-                        <input
-                            @blur=${this._updateAmountToInvest}
-                            type="number"
-                            value="${this.amountToInvest}"
-                            step="0.01"
-                        />
-                        ${this.appSettings.currencySymbol}
-                    </label>
+                    <cifer-amount-input
+                        @cifer-amount-input:change="${this._updateAmountToInvest}"
+                        .appSettings=${this.appSettings}
+                        .label=${'To invest'}
+                        .value=${this.currentValue}
+                    ></cifer-amount-input>
                     <button
                         @click="${this._runCalculation}"
                     >Calculate
